@@ -1,0 +1,7 @@
+## Interface: 11200
+## Title: TPS - Target Position Status
+## Notes: Shows Behind/Front, LOS, and Range status for your target
+## Author: torio
+## SavedVariables: TPS_DB
+## Dependencies: UnitXP_SP3_Addon
+TPS.lua
