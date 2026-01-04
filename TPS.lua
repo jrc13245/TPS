@@ -407,7 +407,7 @@ end)
 local function ToggleLock()
     db.locked = not db.locked
     if db.locked then
-        lockIcon:SetText("L")
+        lockIcon:SetText("")
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Frame locked")
     else
         lockIcon:SetText("U")
@@ -681,7 +681,7 @@ SlashCmdList["TPS"] = function(msg)
             DEFAULT_CHAT_FRAME:AddMessage("    behind, front, los, nolos, melee, ranged")
             DEFAULT_CHAT_FRAME:AddMessage("  Example: /tps alpha background 0.5")
         end
-    elseif string.find(msg, "^color%s+") then
+    elseif msg == "color" or string.find(msg, "^color%s+") then
         local _, _, element, color = string.find(msg, "^color%s+(%S+)%s*(%S*)")
         if element and color and color ~= "" then
             SetColor(element, color)
@@ -758,7 +758,7 @@ eventFrame:SetScript("OnEvent", function()
 
         -- Restore lock state and apply alpha
         if db.locked then
-            lockIcon:SetText("L")
+            lockIcon:SetText("")
         else
             lockIcon:SetText("U")
         end
