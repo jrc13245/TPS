@@ -54,6 +54,17 @@ local defaults = {
     colorNolos = nil,
     colorMelee = nil,
     colorRanged = nil,
+    -- Alpha/opacity settings (0.0 = invisible, 1.0 = fully opaque)
+    alphaBackground = 0.75,
+    alphaBorder = 0.8,
+    alphaTitle = 1.0,
+    alphaDistance = 1.0,
+    alphaBehind = 1.0,
+    alphaFront = 1.0,
+    alphaLos = 1.0,
+    alphaNolos = 1.0,
+    alphaMelee = 1.0,
+    alphaRanged = 1.0,
 }
 
 -- Default colors (used when custom not set)
@@ -122,7 +133,7 @@ titleText:SetTextColor(DEFAULT_COLORS.title.r, DEFAULT_COLORS.title.g, DEFAULT_C
 -- Distance text
 local distanceText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 distanceText:SetPoint("TOP", titleText, "BOTTOM", 0, -2)
-distanceText:SetText("Distance: ---")
+distanceText:SetText("---")
 distanceText:SetTextColor(DEFAULT_COLORS.distance.r, DEFAULT_COLORS.distance.g, DEFAULT_COLORS.distance.b)
 
 -- Behind/Front text (centered)
@@ -262,15 +273,15 @@ end
 local function UpdateStatus()
     if not hasUnitXP then
         titleText:SetText("Target: NO UnitXP")
-        titleText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
-        distanceText:SetText("Distance: ---")
-        distanceText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+        titleText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaTitle)
+        distanceText:SetText("---")
+        distanceText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaDistance)
         behindText:SetText("---")
-        behindText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+        behindText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaBehind)
         losText:SetText("---")
-        losText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+        losText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaLos)
         rangeText:SetText("---")
-        rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+        rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaMelee)
         return
     end
 
@@ -281,15 +292,15 @@ local function UpdateStatus()
         end
 
         titleText:SetText("Target: ---")
-        titleText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
-        distanceText:SetText("Distance: ---")
-        distanceText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+        titleText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaTitle)
+        distanceText:SetText("---")
+        distanceText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaDistance)
         behindText:SetText("---")
-        behindText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+        behindText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaBehind)
         losText:SetText("---")
-        losText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+        losText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaLos)
         rangeText:SetText("---")
-        rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+        rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaMelee)
         return
     end
 
@@ -302,18 +313,18 @@ local function UpdateStatus()
     local targetName = UnitName("target") or "Unknown"
     titleText:SetText("Target: " .. targetName)
     local titleColor = GetColor("title")
-    titleText:SetTextColor(titleColor.r, titleColor.g, titleColor.b)
+    titleText:SetTextColor(titleColor.r, titleColor.g, titleColor.b, db.alphaTitle)
 
     -- Update distance
     if db.showDistance then
         local distance = UnitXP("distanceBetween", "player", "target")
         if distance then
-            distanceText:SetText(string.format("Distance: %.2f yds", distance))
+            distanceText:SetText(string.format("%.2f yds", distance))
             local distColor = GetColor("distance")
-            distanceText:SetTextColor(distColor.r, distColor.g, distColor.b)
+            distanceText:SetTextColor(distColor.r, distColor.g, distColor.b, db.alphaDistance)
         else
-            distanceText:SetText("Distance: ---")
-            distanceText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+            distanceText:SetText("---")
+            distanceText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaDistance)
         end
     end
 
@@ -323,11 +334,11 @@ local function UpdateStatus()
         if isBehind then
             behindText:SetText("BEHIND")
             local behindColor = GetColor("behind")
-            behindText:SetTextColor(behindColor.r, behindColor.g, behindColor.b)
+            behindText:SetTextColor(behindColor.r, behindColor.g, behindColor.b, db.alphaBehind)
         else
             behindText:SetText("FRONT")
             local frontColor = GetColor("front")
-            behindText:SetTextColor(frontColor.r, frontColor.g, frontColor.b)
+            behindText:SetTextColor(frontColor.r, frontColor.g, frontColor.b, db.alphaFront)
         end
     end
 
@@ -337,11 +348,11 @@ local function UpdateStatus()
         if inLOS then
             losText:SetText("IN LOS")
             local losColor = GetColor("los")
-            losText:SetTextColor(losColor.r, losColor.g, losColor.b)
+            losText:SetTextColor(losColor.r, losColor.g, losColor.b, db.alphaLos)
         else
             losText:SetText("NO LOS")
             local nolosColor = GetColor("nolos")
-            losText:SetTextColor(nolosColor.r, nolosColor.g, nolosColor.b)
+            losText:SetTextColor(nolosColor.r, nolosColor.g, nolosColor.b, db.alphaNolos)
         end
     end
 
@@ -352,15 +363,15 @@ local function UpdateStatus()
             if meleeDistance <= MELEE_RANGE then
                 rangeText:SetText("MELEE")
                 local meleeColor = GetColor("melee")
-                rangeText:SetTextColor(meleeColor.r, meleeColor.g, meleeColor.b)
+                rangeText:SetTextColor(meleeColor.r, meleeColor.g, meleeColor.b, db.alphaMelee)
             else
                 rangeText:SetText("RANGED")
                 local rangedColor = GetColor("ranged")
-                rangeText:SetTextColor(rangedColor.r, rangedColor.g, rangedColor.b)
+                rangeText:SetTextColor(rangedColor.r, rangedColor.g, rangedColor.b, db.alphaRanged)
             end
         else
             rangeText:SetText("---")
-            rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b)
+            rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaMelee)
         end
     end
 end
@@ -397,13 +408,12 @@ local function ToggleLock()
     db.locked = not db.locked
     if db.locked then
         lockIcon:SetText("L")
-        frame:SetBackdropBorderColor(0.3, 0.3, 0.3, 0.6)
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Frame locked")
     else
         lockIcon:SetText("U")
-        frame:SetBackdropBorderColor(0.4, 0.4, 0.4, 0.8)
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Frame unlocked - drag to move")
     end
+    ApplyFrameAlpha()
 end
 
 -- Set scale
@@ -548,6 +558,74 @@ local function ShowColors()
     end
 end
 
+-- Valid alpha elements and their display names
+local ALPHA_ELEMENTS = {
+    background = "Background",
+    border = "Border",
+    title = "Title text",
+    distance = "Distance text",
+    behind = "Behind text",
+    front = "Front text",
+    los = "In LOS text",
+    nolos = "No LOS text",
+    melee = "Melee text",
+    ranged = "Ranged text",
+}
+
+-- Apply alpha to frame background and border
+local function ApplyFrameAlpha()
+    frame:SetBackdropColor(0.1, 0.1, 0.1, db.alphaBackground)
+    if db.locked then
+        frame:SetBackdropBorderColor(0.3, 0.3, 0.3, db.alphaBorder * 0.75)
+    else
+        frame:SetBackdropBorderColor(0.4, 0.4, 0.4, db.alphaBorder)
+    end
+end
+
+-- Set alpha for an element
+local function SetAlpha(element, value)
+    element = string.lower(element or "")
+    value = tonumber(value)
+
+    if not ALPHA_ELEMENTS[element] then
+        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Unknown element '" .. element .. "'")
+        DEFAULT_CHAT_FRAME:AddMessage("  Valid elements: background, border, title, distance,")
+        DEFAULT_CHAT_FRAME:AddMessage("    behind, front, los, nolos, melee, ranged")
+        return false
+    end
+
+    if not value or value < 0 or value > 1 then
+        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Alpha must be between 0 and 1")
+        return false
+    end
+
+    local key = "alpha" .. string.upper(string.sub(element, 1, 1)) .. string.sub(element, 2)
+    db[key] = value
+
+    -- Apply immediately
+    if element == "background" or element == "border" then
+        ApplyFrameAlpha()
+    end
+
+    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r " .. ALPHA_ELEMENTS[element] .. " alpha set to " .. string.format("%.2f", value))
+    return true
+end
+
+-- Show current alpha settings
+local function ShowAlpha()
+    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS alpha:|r (use /tps alpha <element> <0-1>)")
+    DEFAULT_CHAT_FRAME:AddMessage("  background: " .. string.format("%.2f", db.alphaBackground))
+    DEFAULT_CHAT_FRAME:AddMessage("  border: " .. string.format("%.2f", db.alphaBorder))
+    DEFAULT_CHAT_FRAME:AddMessage("  title: " .. string.format("%.2f", db.alphaTitle))
+    DEFAULT_CHAT_FRAME:AddMessage("  distance: " .. string.format("%.2f", db.alphaDistance))
+    DEFAULT_CHAT_FRAME:AddMessage("  behind: " .. string.format("%.2f", db.alphaBehind))
+    DEFAULT_CHAT_FRAME:AddMessage("  front: " .. string.format("%.2f", db.alphaFront))
+    DEFAULT_CHAT_FRAME:AddMessage("  los: " .. string.format("%.2f", db.alphaLos))
+    DEFAULT_CHAT_FRAME:AddMessage("  nolos: " .. string.format("%.2f", db.alphaNolos))
+    DEFAULT_CHAT_FRAME:AddMessage("  melee: " .. string.format("%.2f", db.alphaMelee))
+    DEFAULT_CHAT_FRAME:AddMessage("  ranged: " .. string.format("%.2f", db.alphaRanged))
+end
+
 -- OnUpdate handler
 frame:SetScript("OnUpdate", function()
     timeSinceUpdate = timeSinceUpdate + arg1
@@ -591,6 +669,18 @@ SlashCmdList["TPS"] = function(msg)
         ShowConfig()
     elseif msg == "colors" then
         ShowColors()
+    elseif msg == "alpha" then
+        ShowAlpha()
+    elseif string.find(msg, "^alpha%s+") then
+        local _, _, element, value = string.find(msg, "^alpha%s+(%S+)%s*(%S*)")
+        if element and value and value ~= "" then
+            SetAlpha(element, value)
+        else
+            DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Usage: /tps alpha <element> <0-1>")
+            DEFAULT_CHAT_FRAME:AddMessage("  Elements: background, border, title, distance,")
+            DEFAULT_CHAT_FRAME:AddMessage("    behind, front, los, nolos, melee, ranged")
+            DEFAULT_CHAT_FRAME:AddMessage("  Example: /tps alpha background 0.5")
+        end
     elseif string.find(msg, "^color%s+") then
         local _, _, element, color = string.find(msg, "^color%s+(%S+)%s*(%S*)")
         if element and color and color ~= "" then
@@ -625,6 +715,9 @@ SlashCmdList["TPS"] = function(msg)
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00Colors:|r")
         DEFAULT_CHAT_FRAME:AddMessage("  /tps colors - Show current color settings")
         DEFAULT_CHAT_FRAME:AddMessage("  /tps color <element> <color> - Set element color")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00Alpha/Opacity:|r")
+        DEFAULT_CHAT_FRAME:AddMessage("  /tps alpha - Show current alpha settings")
+        DEFAULT_CHAT_FRAME:AddMessage("  /tps alpha <element> <0-1> - Set element opacity")
     end
 end
 
@@ -663,13 +756,13 @@ eventFrame:SetScript("OnEvent", function()
             frame:SetScale(db.scale)
         end
 
-        -- Restore lock state
+        -- Restore lock state and apply alpha
         if db.locked then
             lockIcon:SetText("L")
-            frame:SetBackdropBorderColor(0.3, 0.3, 0.3, 0.6)
         else
             lockIcon:SetText("U")
         end
+        ApplyFrameAlpha()
 
         -- Update text positions based on config
         UpdateTextPositions()
