@@ -272,16 +272,12 @@ end
 -- Update the display
 local function UpdateStatus()
     if not hasUnitXP then
-        titleText:SetText("Target: NO UnitXP")
+        titleText:SetText("NO UnitXP")
         titleText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaTitle)
-        distanceText:SetText("---")
-        distanceText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaDistance)
-        behindText:SetText("---")
-        behindText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaBehind)
-        losText:SetText("---")
-        losText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaLos)
-        rangeText:SetText("---")
-        rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaMelee)
+        distanceText:SetText("")
+        behindText:SetText("")
+        losText:SetText("")
+        rangeText:SetText("")
         return
     end
 
@@ -291,16 +287,11 @@ local function UpdateStatus()
             return
         end
 
-        titleText:SetText("Target: ---")
-        titleText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaTitle)
-        distanceText:SetText("---")
-        distanceText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaDistance)
-        behindText:SetText("---")
-        behindText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaBehind)
-        losText:SetText("---")
-        losText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaLos)
-        rangeText:SetText("---")
-        rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaMelee)
+        titleText:SetText("")
+        distanceText:SetText("")
+        behindText:SetText("")
+        losText:SetText("")
+        rangeText:SetText("")
         return
     end
 
@@ -373,6 +364,16 @@ local function UpdateStatus()
             rangeText:SetText("---")
             rangeText:SetTextColor(COLOR_NEUTRAL.r, COLOR_NEUTRAL.g, COLOR_NEUTRAL.b, db.alphaMelee)
         end
+    end
+end
+
+-- Apply alpha to frame background and border (defined early for ToggleLock)
+local function ApplyFrameAlpha()
+    frame:SetBackdropColor(0.1, 0.1, 0.1, db.alphaBackground)
+    if db.locked then
+        frame:SetBackdropBorderColor(0.3, 0.3, 0.3, db.alphaBorder * 0.75)
+    else
+        frame:SetBackdropBorderColor(0.4, 0.4, 0.4, db.alphaBorder)
     end
 end
 
@@ -571,16 +572,6 @@ local ALPHA_ELEMENTS = {
     melee = "Melee text",
     ranged = "Ranged text",
 }
-
--- Apply alpha to frame background and border
-local function ApplyFrameAlpha()
-    frame:SetBackdropColor(0.1, 0.1, 0.1, db.alphaBackground)
-    if db.locked then
-        frame:SetBackdropBorderColor(0.3, 0.3, 0.3, db.alphaBorder * 0.75)
-    else
-        frame:SetBackdropBorderColor(0.4, 0.4, 0.4, db.alphaBorder)
-    end
-end
 
 -- Set alpha for an element
 local function SetAlpha(element, value)
