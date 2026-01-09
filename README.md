@@ -17,10 +17,12 @@ A World of Warcraft 1.12.1 addon that displays real-time target information incl
 ### Additional Features
 
 - Movable and lockable frame
-- Configurable scale (0.5x - 2.0x)
+- Configurable scale (0.3x - 2.0x)
 - Toggle individual display elements on/off
 - Option to hide frame when no target
 - Position saved between sessions
+- Customizable colors for all text elements
+- Adjustable transparency/alpha for all elements
 - Semi-transparent grey background
 
 ## Installation
@@ -38,7 +40,7 @@ A World of Warcraft 1.12.1 addon that displays real-time target information incl
 | `/tps unlock` | Unlock the frame (allows dragging) |
 | `/tps toggle` | Toggle lock state |
 | `/tps reset` | Reset position to center |
-| `/tps scale <0.5-2.0>` | Set frame scale |
+| `/tps scale <0.3-2.0>` | Set frame scale |
 | `/tps show` | Show the frame |
 | `/tps hide` | Hide the frame |
 | `/tps config` | Show current settings |
@@ -47,11 +49,55 @@ A World of Warcraft 1.12.1 addon that displays real-time target information incl
 
 | Command | Description |
 |---------|-------------|
+| `/tps title` | Toggle target name display |
 | `/tps distance` | Toggle distance display |
 | `/tps position` | Toggle behind/front display |
 | `/tps los` | Toggle line of sight display |
 | `/tps range` | Toggle melee/ranged display |
 | `/tps hidenotarget` | Toggle auto-hide when no target |
+
+### Color Customization
+
+| Command | Description |
+|---------|-------------|
+| `/tps colors` | Show current color settings |
+| `/tps color <element> <color>` | Set element color |
+
+**Elements:** `title`, `distance`, `behind`, `front`, `los`, `nolos`, `melee`, `ranged`
+
+**Available Colors:**
+- Neutrals: `white`, `gray`, `black`, `brown`
+- Warm: `red`, `coral`, `salmon`, `orange`, `peach`, `gold`, `yellow`
+- Cool: `lime`, `mint`, `green`, `teal`, `cyan`, `sky`, `blue`
+- Purple/Pink: `indigo`, `purple`, `violet`, `lavender`, `magenta`, `pink`
+
+Use `default` or `reset` to restore the original color.
+
+**Examples:**
+```
+/tps color behind cyan
+/tps color front red
+/tps color title white
+/tps color melee default
+```
+
+### Alpha/Opacity Settings
+
+| Command | Description |
+|---------|-------------|
+| `/tps alpha` | Show current alpha settings |
+| `/tps alpha <element> <0-1>` | Set element opacity |
+
+**Elements:** `background`, `border`, `title`, `distance`, `behind`, `front`, `los`, `nolos`, `melee`, `ranged`
+
+Values range from `0` (invisible) to `1` (fully opaque).
+
+**Examples:**
+```
+/tps alpha background 0.5
+/tps alpha border 0.8
+/tps alpha title 1.0
+```
 
 ## Distance Notes
 
@@ -59,7 +105,7 @@ A World of Warcraft 1.12.1 addon that displays real-time target information incl
 - Melee range threshold: ≤2.00 yds = MELEE, >2.00 yds = RANGED
 - This corresponds to the game's 5-yard melee range (different measurement methods)
 
-## Colors
+## Default Colors
 
 | Status | Color |
 |--------|-------|
@@ -78,15 +124,15 @@ A World of Warcraft 1.12.1 addon that displays real-time target information incl
 ```
 ┌─────────────────────┐
 │  Target: <name>     │
-│  Distance: X.XX yds │
+│      X.XX yds       │
 │       BEHIND        │
 │       IN LOS        │
-│       MELEE         │
-│                   L │
+│       MELEE       U │
 └─────────────────────┘
 ```
 
-The frame automatically resizes when display elements are toggled off.
+- The `U` indicator appears when the frame is unlocked (draggable)
+- The frame automatically resizes when display elements are toggled off
 
 ## License
 
