@@ -408,9 +408,11 @@ end)
 local function ToggleLock()
     db.locked = not db.locked
     if db.locked then
+        frame:EnableMouse(false)
         lockIcon:SetText("")
-        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Frame locked")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Frame locked (click-through)")
     else
+        frame:EnableMouse(true)
         lockIcon:SetText("U")
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00TPS:|r Frame unlocked - drag to move")
     end
@@ -617,8 +619,13 @@ local function ShowAlpha()
     DEFAULT_CHAT_FRAME:AddMessage("  ranged: " .. string.format("%.2f", db.alphaRanged))
 end
 
+-- Flag to prevent UnitXP calls during logout (crash prevention)
+local TPS_IsLoggingOut = false
+
 -- OnUpdate handler
 frame:SetScript("OnUpdate", function()
+    -- Prevent UnitXP calls during logout (crash prevention)
+    if TPS_IsLoggingOut then return end
     timeSinceUpdate = timeSinceUpdate + arg1
     if timeSinceUpdate >= db.updateInterval then
         timeSinceUpdate = 0
@@ -716,9 +723,16 @@ end
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_LOGOUT")
+eventFrame:RegisterEvent("PLAYER_LEAVING_WORLD")
 eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
 
 eventFrame:SetScript("OnEvent", function()
+    -- Handle logout to prevent UnitXP crashes during shutdown
+    if event == "PLAYER_LOGOUT" or event == "PLAYER_LEAVING_WORLD" then
+        TPS_IsLoggingOut = true
+        frame:SetScript("OnUpdate", nil)  -- Stop OnUpdate completely
+        return
+    end
     if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
         -- Initialize saved variables
         if not TPS_DB then
@@ -749,8 +763,10 @@ eventFrame:SetScript("OnEvent", function()
 
         -- Restore lock state and apply alpha
         if db.locked then
+            frame:EnableMouse(false)
             lockIcon:SetText("")
         else
+            frame:EnableMouse(true)
             lockIcon:SetText("U")
         end
         ApplyFrameAlpha()
